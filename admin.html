@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Lojas - UruShop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen p-6">
+
+    <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl p-8 space-y-6">
+        <div>
+            <h1 class="text-2xl font-black text-slate-900">⚡ Gerenciador de Lojas</h1>
+            <p class="text-sm text-slate-500">Configure os dados do produto e baixe o novo arquivo de configuração.</p>
+        </div>
+
+        <form id="config-form" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nome da Loja</label>
+                <input type="text" id="storeName" value="UruShop Express" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nicho</label>
+                    <input type="text" id="niche" value="Gadgets & Tecnologia" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Moeda</label>
+                    <input type="text" id="currency" value="$U" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+                </div>
+            </div>
+
+            <hr class="border-slate-100 my-4">
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Título do Produto</label>
+                <input type="text" id="title" value="Smartwatch Ultra Series 9 + Fone Bluetooth Brinde" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Subtítulo / Descrição Curta</label>
+                <input type="text" id="subtitle" value="O kit tecnológico mais desejado do momento com entrega garantida em todo o Uruguai." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Preço Antigo ($U)</label>
+                    <input type="text" id="oldPrice" value="2.990" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Preço Atual ($U)</label>
+                    <input type="text" id="price" value="1.490" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">URL da Imagem do Produto</label>
+                <input type="url" id="image" value="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Link de Checkout (Mercado Pago / WhatsApp)</label>
+                <input type="text" id="checkoutLink" value="https://mpago.li/seu-link-aqui" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+            </div>
+
+            <button type="button" onclick="gerarConfig()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transition duration-200">
+                📥 Gerar e Baixar config.js
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function gerarConfig() {
+            const data = {
+                storeName: document.getElementById('storeName').value,
+                niche: document.getElementById('niche').value,
+                primaryColor: "indigo",
+                currency: document.getElementById('currency').value,
+                product: {
+                    title: document.getElementById('title').value,
+                    subtitle: document.getElementById('subtitle').value,
+                    oldPrice: document.getElementById('oldPrice').value,
+                    price: document.getElementById('price').value,
+                    installments: "3x sem juros",
+                    image: document.getElementById('image').value,
+                    badge: "Frete Grátis para todo o Uruguai 🇺🇾"
+                },
+                checkoutLink: document.getElementById('checkoutLink').value,
+                whatsapp: "+59899123456"
+            };
+
+            const fileContent = `// Gerado automaticamente pelo Painel Admin
+export const storeConfig = ${JSON.stringify(data, null, 4)};`;
+
+            const blob = new Blob([fileContent], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'config.js';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('Arquivo config.js gerado com sucesso! Mova ele para a pasta src/ do seu projeto.');
+        }
+    </script>
+</body>
+</html>
